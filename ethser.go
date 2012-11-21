@@ -8,8 +8,8 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"net"
-        "fmt"
 )
 
 func main() {
@@ -48,6 +48,10 @@ func main() {
 	if err != nil {
 		fmt.Printf("%s", err)
 	}
+	fmt.Printf("%s\n", adam)
 	fmt.Printf("%X: %s, %s, %s, %s %v %f\n", adam.Address, adam.BaudRate, adam.InputRange, adam.Version, adam.Name, adam.Value, val)
+	adam.Address = 7
+	adam.DataFormat = EngineeringUnits
+	adam.SetConfig()
 	conn.Close()
 }
