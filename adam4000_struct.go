@@ -6,16 +6,33 @@
 
 package main
 
-import "bufio"
+import (
+	"bufio"
+	"fmt"
+)
 
 type DataFormatCode byte
 
 const (
-	EngineeringUnits = 0
+	EngineeringUnits = iota
 	PercentofFSR
 	TwosComplement
 	Ohms
 )
+
+func (df DataFormatCode) String() string {
+	switch df {
+	case EngineeringUnits:
+		return "Engineering Units"
+	case PercentofFSR:
+		return "% of FSR"
+	case TwosComplement:
+		return "Twos Complement"
+	case Ohms:
+		return "Ohms"
+	}
+	return "Undefined"
+}
 
 type InputRangeCode byte
 
@@ -118,13 +135,19 @@ type ADAM4000 struct {
 	address    byte
 	InputRange InputRangeCode
 	BaudRate   BaudRateCode
+	DataFormat DataFormatCode
 
 	Name, Version string
 
 	Value []float64
 
-	integration_time, checksum bool
+	Integration_time bool //true = 50Hz, false = 60Hz
+	Checksum         bool //true = Checksum enabled
 
 	rc *bufio.Reader
 	wc *bufio.Writer
+}
+
+func (a ADAM4000) String() string {
+	return fmt.Sprintf("Address = %d, InputRange = %s, BaudRate = %s, Name = %s, Version = %s, Integration = %t, Checksum = %t, Data Format = %s", a.Address, a.InputRange, a.BaudRate, a.Name, a.Version, a.Integration_time, a.Checksum, a.DataFormat)
 }
