@@ -15,7 +15,14 @@ import (
 )
 
 func NewADAM4000(addr byte, rc *bufio.Reader, wc *bufio.Writer) *ADAM4000 {
-	return &ADAM4000{address: addr, rc: rc, wc: wc, Value: make([]float64, 8)}
+	var a ADAM4000
+	a.address = addr
+	a.rc = rc
+	a.wc = wc
+	a.Value = make([]float64, 8)
+	a.Retries = 3
+	go a.startReader()
+	return &a
 }
 
 func (a *ADAM4000) GetName() (string, error) {

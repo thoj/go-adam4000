@@ -146,6 +146,11 @@ type ADAM4000 struct {
 
 	rc *bufio.Reader
 	wc *bufio.Writer
+
+	readChan  chan []byte
+	errorChan chan error
+
+	Retries int
 }
 
 func (a ADAM4000) String() string {
