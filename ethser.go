@@ -19,6 +19,7 @@ func main() {
 		return
 	}
 	adam := NewADAM4000(0, bufio.NewReader(conn), bufio.NewWriter(conn))
+	adam.Retries = 1
 	err = adam.GetConfig()
 	if err != nil {
 		fmt.Printf("%s", err)
