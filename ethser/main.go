@@ -1,4 +1,4 @@
-// Copyright 2009 Thomas Jager <mail@jager.no> All rights reserved.
+// Copyright 2012 Thomas Jager <mail@jager.no> All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -8,6 +8,7 @@ package main
 
 import (
 	"bufio"
+        "go-adam4000"
 	"fmt"
 	"net"
 )
@@ -18,7 +19,7 @@ func main() {
 		fmt.Printf("%s", err)
 		return
 	}
-	adam := NewADAM4000(0, bufio.NewReader(conn), bufio.NewWriter(conn))
+	adam := adam4000.NewADAM4000(0, bufio.NewReader(conn), bufio.NewWriter(conn))
 	adam.Retries = 1
 	err = adam.GetConfig()
 	if err != nil {
@@ -32,7 +33,7 @@ func main() {
 	if err != nil {
 		fmt.Printf("%s", err)
 	}
-	err = adam.SetChannelRange(4, cKTc)
+	err = adam.SetChannelRange(4, adam4000.RangeKTc)
 	if err != nil {
 		fmt.Printf("%s", err)
 	}
@@ -52,7 +53,7 @@ func main() {
 	fmt.Printf("%s\n", adam)
 	fmt.Printf("%X: %s, %s, %s, %s %v %f\n", adam.Address, adam.BaudRate, adam.InputRange, adam.Version, adam.Name, adam.Value, val)
 	adam.Address = 7
-	adam.DataFormat = EngineeringUnits
+	adam.DataFormat = adam4000.DataFormatEngUnits
 	adam.SetConfig()
 	conn.Close()
 }

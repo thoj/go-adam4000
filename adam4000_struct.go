@@ -4,7 +4,7 @@
 
 // Driver for ADAM-4000 series I/O Modules from Advantech
 
-package main
+package adam4000
 
 import (
 	"bufio"
@@ -14,21 +14,21 @@ import (
 type DataFormatCode byte
 
 const (
-	EngineeringUnits = iota
-	PercentofFSR
-	TwosComplement
-	Ohms
+	DataFormatEngUnits = iota
+	DataFormatPercentFSR
+	DataFormatTwosComplement
+	DataFormatOhms
 )
 
 func (df DataFormatCode) String() string {
 	switch df {
-	case EngineeringUnits:
+	case DataFormatEngUnits:
 		return "Engineering Units"
-	case PercentofFSR:
+	case DataFormatPercentFSR:
 		return "% of FSR"
-	case TwosComplement:
+	case DataFormatTwosComplement:
 		return "Twos Complement"
-	case Ohms:
+	case DataFormatOhms:
 		return "Ohms"
 	}
 	return "Undefined"
@@ -37,65 +37,65 @@ func (df DataFormatCode) String() string {
 type InputRangeCode byte
 
 const (
-	c15mV InputRangeCode = iota
-	c50mV
-	c100mV
-	c500mV
-	c1V
-	c2_5V
+	Range15mV InputRangeCode = iota
+	Range50mV
+	Range100mV
+	Range500mV
+	Range1V
+	Range2_5V
 	_
-	c4_20mA
-	c10V
-	c5V
+	Range4_20mA
+	Range10V
+	Range5V
 	_
 	_
 	_
-	c20mA
+	Range20mA
 	_
-	cJTc
-	cKTc
-	cTTc
-	cETc
-	cRTc
-	cSTc
-	cBTc
+	RangeJTc
+	RangeKTc
+	RangeTTc
+	RangeETc
+	RangeRTc
+	RangeSTc
+	RangeBTc
 )
 
 func (br InputRangeCode) String() string {
 	switch br {
-	case c15mV:
+	case Range15mV:
 		return "+/- 15mV"
-	case c50mV:
+	case Range50mV:
 		return "+/- 50mV"
-	case c100mV:
+	case Range100mV:
 		return "+/- 100mV"
-	case c500mV:
+	case Range500mV:
 		return "+/- 500mV"
-	case c1V:
+	case Range1V:
 		return "+/- 1V"
-	case c2_5V:
+	case Range2_5V:
 		return "+/- 2.5V"
-	case c4_20mA:
+	case Range4_20mA:
 		return "4~20mA"
-	case c10V:
+	case Range10V:
 		return "+/- 10V"
-	case c5V:
+	case Range5V:
 		return "+/- 5V"
-	case c20mA:
+	case Range20mA:
 		return "+/- 20mA"
-	case cJTc:
+	case RangeJTc:
 		return "Type-J TC"
-	case cKTc:
+	case RangeKTc:
 		return "Type-K TC"
-	case cTTc:
+	case RangeTTc:
 		return "Type-T TC"
-	case cETc:
+	case RangeETc:
 		return "Type-E TC"
-	case cRTc:
+	case RangeRTc:
 		return "Type-R TC"
-	case cSTc:
+	case RangeSTc:
 		return "Type-S TC"
-	case cBTc:
+	case RangeBTc:
 		return "Type-B TC"
 	}
 	return "Undefined"
@@ -104,27 +104,27 @@ func (br InputRangeCode) String() string {
 type BaudRateCode byte
 
 const (
-	c1200bps BaudRateCode = (iota + 0x03)
-	c2400bps
-	c4800bps
-	c9600bps
-	c19200bps
-	c38400bps
+	BaudRate1200bps BaudRateCode = (iota + 0x03)
+	BaudRate2400bps
+	BaudRate4800bps
+	BaudRate9600bps
+	BaudRate19200bps
+	BaudRate38400bps
 )
 
 func (br BaudRateCode) String() string {
 	switch br {
-	case c1200bps:
+	case BaudRate1200bps:
 		return "1200"
-	case c2400bps:
+	case BaudRate2400bps:
 		return "2400"
-	case c4800bps:
+	case BaudRate4800bps:
 		return "4800"
-	case c9600bps:
+	case BaudRate9600bps:
 		return "9600"
-	case c19200bps:
+	case BaudRate19200bps:
 		return "19200"
-	case c38400bps:
+	case BaudRate38400bps:
 		return "38400"
 	}
 	return "Undefined"

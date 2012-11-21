@@ -4,7 +4,7 @@
 
 // Driver for ADAM-4000 series I/O Modules from Advantech
 
-package main
+package adam4000
 
 import (
 	"bufio"
