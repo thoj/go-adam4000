@@ -11,7 +11,6 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"net"
 	"strconv"
 	"strings"
 )
@@ -137,64 +136,12 @@ type ADAM4000 struct {
 	wc *bufio.Writer
 }
 
-func main() {
-	conn, err := net.Dial("tcp", "192.168.0.60:5301")
-	if err != nil {
-		fmt.Printf("%s", err)
-		return
-	}
-	adam := NewADAM4000(0, bufio.NewReader(conn), bufio.NewWriter(conn))
-	err = adam.GetConfig()
-	if err != nil {
-		fmt.Printf("%s", err)
-	}
-	_, err = adam.GetVersion()
-	if err != nil {
-		fmt.Printf("%s", err)
-	}
-	_, err = adam.GetName()
-	if err != nil {
-		fmt.Printf("%s", err)
-	}
-        err = adam.SetChannelRange(4, cKTc)
-	if err != nil {
-		fmt.Printf("%s", err)
-	}
-        rangec, err := adam.GetChannelRange(4)
-        fmt.Printf("%s\n", rangec)
-	if err != nil {
-		fmt.Printf("%s", err)
-	}
-	_, err = adam.ReadAll()
-	if err != nil {
-		fmt.Printf("%s", err)
-	}
-	val, err := adam.ReadChannel(3)
-	if err != nil {
-		fmt.Printf("%s", err)
-	}
-	fmt.Printf("%X: %s, %s, %s, %s %v %f\n", adam.Address, adam.BaudRate, adam.InputRange, adam.Version, adam.Name, adam.Value, val)
-	conn.Close()
-}
-
 func NewADAM4000(addr byte, rc *bufio.Reader, wc *bufio.Writer) *ADAM4000 {
 	return &ADAM4000{address: addr, rc: rc, wc: wc, Value: make([]float64, 8)}
 }
 
-//Data Format 
-//Bit   1               2               3   4   5   6    7  8
-//      Integration     Checksum        n/a N/A n/A N/A  dATA
-//      Time            Status                           fORMAT
-
-//AANNTTCCFF\r
-// AA = Address
-// NN = New Address
-// TT = Input Range (4015, 4019 = 00)
-// CC = Baud Rate
-// FF = Data Format (8 bits) (00: Engineering Units, 01: % of FSR, 10: Two's compliment, 11: Ohms)
-
 func (a *ADAM4000) comResF(format string, va ...interface{}) ([]byte, error) {
-        buf := fmt.Sprintf(format, va...)
+	buf := fmt.Sprintf(format, va...)
 	fmt.Printf("<-- %s\n", buf)
 	_, err := fmt.Fprint(a.wc, buf)
 	if err != nil {
@@ -221,7 +168,7 @@ func (a *ADAM4000) GetName() (string, error) {
 	return a.Name, nil
 }
 
-func (a *ADAM4000) ReadAll() ([]float64, error) {
+func (a *ADAM4000) GetAllValue() ([]float64, error) {
 	resp, err := a.comResF("#%02X\r", a.address)
 	if err != nil {
 		return nil, err
@@ -238,7 +185,7 @@ func (a *ADAM4000) ReadAll() ([]float64, error) {
 	return a.Value, err
 }
 
-func (a *ADAM4000) ReadChannel(n int) (float64, error) {
+func (a *ADAM4000) GetChannelValue(n int) (float64, error) {
 	resp, err := a.comResF("#%02X%d\r", a.address, n)
 	if err != nil {
 		return float64(0), err
@@ -268,21 +215,21 @@ func (a *ADAM4000) SetChannelRange(channel int, rangec InputRangeCode) error {
 func (a *ADAM4000) GetChannelRange(channel int) (InputRangeCode, error) {
 	resp, err := a.comResF("$%02X8C%d\r", a.address, channel)
 	if err != nil {
-		return 0,err
+		return 0, err
 	}
-        rangec := make([]byte, 1)
+	rangec := make([]byte, 1)
 	hex.Decode(rangec, resp[6:8])
 	return InputRangeCode(rangec[0]), nil
 }
 
 func (a *ADAM4000) SyncronizeRead() error {
 	//Stub
-        return nil
+	return nil
 }
 
 func (a *ADAM4000) SyncronizedValue() ([]float64, error) {
 	//Stub
-        return nil, nil
+	return nil, nil
 }
 
 func (a *ADAM4000) GetConfig() error {
