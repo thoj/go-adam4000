@@ -9,6 +9,7 @@ package main
 import (
 	"bufio"
 	"encoding/hex"
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -32,14 +33,35 @@ func (a *ADAM4000) GetAllValue() ([]float64, error) {
 		return nil, err
 	}
 	values := string(resp[1:])
-	a.Value[0], err = strconv.ParseFloat(values[0:7], 64)
-	a.Value[1], err = strconv.ParseFloat(values[7:14], 64)
-	a.Value[2], err = strconv.ParseFloat(values[14:21], 64)
-	a.Value[3], err = strconv.ParseFloat(values[21:28], 64)
-	a.Value[4], err = strconv.ParseFloat(values[28:35], 64)
-	a.Value[5], err = strconv.ParseFloat(values[35:42], 64)
-	a.Value[6], err = strconv.ParseFloat(values[42:49], 64)
-	a.Value[7], err = strconv.ParseFloat(values[49:56], 64)
+	fmt.Printf("%d\n", len(values))
+	if len(values) == 57 {
+		a.Value[0], err = strconv.ParseFloat(values[0:7], 64)
+		a.Value[1], err = strconv.ParseFloat(values[7:14], 64)
+		a.Value[2], err = strconv.ParseFloat(values[14:21], 64)
+		a.Value[3], err = strconv.ParseFloat(values[21:28], 64)
+		a.Value[4], err = strconv.ParseFloat(values[28:35], 64)
+		a.Value[5], err = strconv.ParseFloat(values[35:42], 64)
+		a.Value[6], err = strconv.ParseFloat(values[42:49], 64)
+		a.Value[7], err = strconv.ParseFloat(values[49:56], 64)
+	} else {
+		intvals := make([]int64, 8)
+		intvals[0], err = strconv.ParseInt(values[0:4], 16, 64)
+		intvals[1], err = strconv.ParseInt(values[4:8], 16, 64)
+		intvals[2], err = strconv.ParseInt(values[8:12], 16, 64)
+		intvals[3], err = strconv.ParseInt(values[12:16], 16, 64)
+		intvals[4], err = strconv.ParseInt(values[16:20], 16, 64)
+		intvals[5], err = strconv.ParseInt(values[20:24], 16, 64)
+		intvals[6], err = strconv.ParseInt(values[24:28], 16, 64)
+		intvals[7], err = strconv.ParseInt(values[28:32], 16, 64)
+		a.Value[0] = float64(intvals[0])
+		a.Value[1] = float64(intvals[1])
+		a.Value[2] = float64(intvals[2])
+		a.Value[3] = float64(intvals[3])
+		a.Value[4] = float64(intvals[4])
+		a.Value[5] = float64(intvals[5])
+		a.Value[6] = float64(intvals[6])
+		a.Value[7] = float64(intvals[7])
+	}
 	return a.Value, err
 }
 
@@ -49,7 +71,12 @@ func (a *ADAM4000) GetChannelValue(n int) (float64, error) {
 		return float64(0), err
 	}
 	values := string(resp[1:])
-	a.Value[n], err = strconv.ParseFloat(values[0:7], 64)
+	if len(values) == 7 {
+		a.Value[n], err = strconv.ParseFloat(values[0:7], 64)
+	} else {
+		intval, _ := strconv.ParseInt(values[0:4], 16, 64)
+		a.Value[n] = float64(intval)
+	}
 	return a.Value[n], err
 }
 
@@ -109,5 +136,25 @@ func (a *ADAM4000) GetConfig() error {
 	a.Address = addr[0]
 	a.InputRange = InputRangeCode(typecode[0])
 	a.BaudRate = BaudRateCode(baud[0])
+	fmt.Printf("%X\n", data)
+	a.Integration_time = data[0]&byte(1<<7) > 0
+	a.Checksum = data[0]&byte(1<<6) > 0
+	a.DataFormat = DataFormatCode(data[0] & byte(2))
+	if a.Address != a.address {
+		fmt.Printf("Warning: Configured address (%d) differs from connected address (%d), in init mode?\n", a.Address, a.address)
+	}
 	return nil
+}
+
+func (a *ADAM4000) SetConfig() error {
+	data := byte(a.DataFormat)
+	if a.Integration_time {
+		data |= byte(1 << 7)
+	}
+	if a.Checksum {
+		data |= byte(1 << 6)
+	}
+
+	_, err := a.comResF("%%%02X%02XFF%02X%02X\r", a.address, a.Address, byte(a.BaudRate), data)
+	return err
 }
