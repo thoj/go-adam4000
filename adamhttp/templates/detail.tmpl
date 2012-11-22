@@ -1,0 +1,11 @@
+{{define "detail"}}
+{{template "header"}}
+<table>
+<tr><td>Address</td><td>{{.Address}}</td></tr>
+<tr><td>Name</td><td>{{.Name}}</td></tr>
+<tr><td>Version</td><td>{{.Version}}</td></tr>
+{{range $index, $element := .Value}}
+    <tr><td>Channel {{$index}}</td><td>{{$element}}</td></tr>
+{{end}}
+{{template "footer"}}
+{{end}}
