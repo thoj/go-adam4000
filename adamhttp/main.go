@@ -66,19 +66,19 @@ func DetailServer(w http.ResponseWriter, req *http.Request) {
 			if _, ok = units[unit]; !ok {
 				units[unit] = adam4000.NewADAM4000(byte(unit), bufio.NewReader(conn), bufio.NewWriter(conn))
 			}
-                        if _, ok := req.Form["setconfig"]; ok {
-                            if setaddress_str, ok := req.Form["setaddress"]; ok {
-		                if setaddress, err := strconv.Atoi(setaddress_str[0]); err == nil && setaddress <= 255 {
-                                    units[unit].Address = byte(setaddress)
-                                }
-                            }
-                            if setinputrange_str, ok := req.Form["setinputrange"]; ok {
-		                if setinputrange, err := strconv.Atoi(setinputrange_str[0]); err == nil && setinputrange <= 255 {
-                                    units[unit].InputRange = adam4000.InputRangeCode(setinputrange)
-                                }
-                            }
-                            units[unit].SetConfig()
-                        }
+			if _, ok := req.Form["setconfig"]; ok {
+				if setaddress_str, ok := req.Form["setaddress"]; ok {
+					if setaddress, err := strconv.Atoi(setaddress_str[0]); err == nil && setaddress <= 255 {
+						units[unit].Address = byte(setaddress)
+					}
+				}
+				if setinputrange_str, ok := req.Form["setinputrange"]; ok {
+					if setinputrange, err := strconv.Atoi(setinputrange_str[0]); err == nil && setinputrange <= 255 {
+						units[unit].InputRange = adam4000.InputRangeCode(setinputrange)
+					}
+				}
+				units[unit].SetConfig()
+			}
 			units[unit].Retries = 1
 			err := units[unit].GetConfig()
 			if err != nil {
@@ -99,10 +99,10 @@ func DetailServer(w http.ResponseWriter, req *http.Request) {
 
 func OverviewServer(w http.ResponseWriter, req *http.Request) {
 	s1, err := template.ParseFiles("templates/header.tmpl", "templates/footer.tmpl", "templates/overview.tmpl")
-        if err != nil {
-            fmt.Fprintf(w, "%s", err)
-            return
-        }
+	if err != nil {
+		fmt.Fprintf(w, "%s", err)
+		return
+	}
 	req.ParseForm()
 	if _, ok := req.Form["scan"]; ok && !scanning {
 		scanning = true
@@ -129,7 +129,7 @@ func ADAMScanner() {
 		units[i] = adam
 	}
 	scanning = false
-        scanning_address = 0
+	scanning_address = 0
 }
 
 func main() {
