@@ -1,11 +1,47 @@
 {{define "detail"}}
 {{template "header"}}
-<table>
+<div style="align: center">
+<table style="width: 400px">
 <tr><td>Address</td><td>{{.Address}}</td></tr>
 <tr><td>Name</td><td>{{.Name}}</td></tr>
 <tr><td>Version</td><td>{{.Version}}</td></tr>
 {{range $index, $element := .Value}}
     <tr><td>Channel {{$index}}</td><td>{{$element}}</td></tr>
 {{end}}
+</table>
+</div>
+<form method="post">
+Address: <input name="setaddress" type="text" value="{{.Address}}"></input><br>
+Input Range: 
+<select name="setinputrange">
+<option value="0">+/- 15mV</option>
+<option value="1">+/- 50mV</option>
+<option value="2">+/- 100mV</option>
+<option value="3">+/- 500mV</option>
+<option value="4">+/- 1V</option>
+<option value="5">+/- 2.5V</option>
+<option value="6">-</option>
+<option value="7">4~20mA</option>
+<option value="8">+/- 10V</option>
+<option value="9">+/- 5V</option>
+<option value="10">-</option>
+<option value="11">-</option>
+<option value="12">-</option>
+<option value="13">20mA</option>
+<option value="15">-</option>
+<option value="16">Type-J TC</option>
+<option value="17">Type-K TC</option>
+<option value="18">Type-T TC</option>
+<option value="19">Type-E TC</option>
+<option value="20">Type-R TC</option>
+<option value="21">Type-S TC</option>
+<option value="22">Type-B TC</option>
+</select>
+<br>
+<input name="setconfig" value="Set config" type="submit"></input>
+</from>
+<div>
+<a href="/">Back to overview</a>
+</div>
 {{template "footer"}}
 {{end}}

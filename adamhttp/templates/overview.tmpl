@@ -1,0 +1,27 @@
+{{define "overview"}}
+{{template "header"}}
+<div style="align: center">
+<table style="width: 80%">
+<tr><th>Adress</th><th>Configured Address</th><th>Name</th><th>Version</th><th>Channel Values</th></tr>
+{{range $index, $element := .Units}}
+<tr>
+    <td><a href="/detail?unit={{$index}}">{{$index}} {{if not $index}} (Init){{end}}</a></td>
+    <td>{{$element.Address}}</td>
+    <td>{{$element.Name}}</td>
+    <td>{{$element.Version}}</td>
+    <td>{{$element.Value}}</td>
+</tr>
+{{end}}
+</table>
+</div>
+<form method="post" action="/">
+{{if .Scanning}}
+    <div>
+    <span>Scanning in progress... Scanning Address {{.Scanning_Address}}</span><br> <input type="submit" name="stopscan" value="Stop Scanning">
+    </div>
+{{else}}
+    <input type="submit" name="scan" value="Start Scanning">
+{{end}}
+</form>
+{{template "footer"}}
+{{end}}
