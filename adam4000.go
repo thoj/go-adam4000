@@ -162,6 +162,6 @@ func (a *ADAM4000) SetConfig() error {
 		data |= byte(1 << 6)
 	}
 
-	_, err := a.comResF("%%%02X%02XFF%02X%02X\r", a.address, a.Address, byte(a.BaudRate), data)
+	_, err := a.comResF("%%%02X%02X%02X%02X%02X\r", a.address, a.Address, byte(a.InputRange), byte(a.BaudRate), data)
 	return err
 }
