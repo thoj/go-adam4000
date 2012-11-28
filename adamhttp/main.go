@@ -56,7 +56,10 @@ func JsonServer(w http.ResponseWriter, req *http.Request) {
 }
 
 func DetailServer(w http.ResponseWriter, req *http.Request) {
-	s1, err := template.ParseFiles("templates/header.tmpl", "templates/footer.tmpl", "templates/detail.tmpl")
+	s1 := template.New("templates/header.tmpl")
+	funcmap := template.FuncMap{"rangeequal": rangeequal}
+	s1.Funcs(funcmap)
+	_, err := s1.ParseFiles("templates/header.tmpl", "templates/footer.tmpl", "templates/detail.tmpl")
 	if err != nil {
 		fmt.Fprintf(w, "Error: %s\n", err)
 	}
@@ -88,7 +91,10 @@ func DetailServer(w http.ResponseWriter, req *http.Request) {
 			units[unit].GetVersion()
 			units[unit].GetName()
 			units[unit].GetAllValue()
-			s1.ExecuteTemplate(w, "detail", units[unit])
+			err = s1.ExecuteTemplate(w, "detail", units[unit])
+			if err != nil {
+				fmt.Printf("Template Error: %s\n", err)
+			}
 		} else {
 			fmt.Fprintf(w, "Malformed Unit Def (Not integer)")
 		}
@@ -119,6 +125,7 @@ func ADAMScanner() {
 	for i := 0; i <= 255 && scanning; i++ {
 		scanning_address = i
 		adam := adam4000.NewADAM4000(byte(i), bufio.NewReader(conn), bufio.NewWriter(conn))
+		adam.Retries = 1
 		err := adam.GetConfig()
 		if err != nil {
 			continue
@@ -130,6 +137,10 @@ func ADAMScanner() {
 	}
 	scanning = false
 	scanning_address = 0
+}
+
+func rangeequal(a int, b adam4000.InputRangeCode) bool {
+	return byte(a) == byte(b)
 }
 
 func main() {

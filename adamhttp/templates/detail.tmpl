@@ -14,32 +14,32 @@
 Address: <input name="setaddress" type="text" value="{{.Address}}"></input><br>
 Input Range: 
 <select name="setinputrange">
-<option value="0">+/- 15mV</option>
-<option value="1">+/- 50mV</option>
-<option value="2">+/- 100mV</option>
-<option value="3">+/- 500mV</option>
-<option value="4">+/- 1V</option>
-<option value="5">+/- 2.5V</option>
-<option value="6">-</option>
-<option value="7">4~20mA</option>
-<option value="8">+/- 10V</option>
-<option value="9">+/- 5V</option>
-<option value="10">-</option>
-<option value="11">-</option>
-<option value="12">-</option>
-<option value="13">20mA</option>
-<option value="15">-</option>
-<option value="16">Type-J TC</option>
-<option value="17">Type-K TC</option>
-<option value="18">Type-T TC</option>
-<option value="19">Type-E TC</option>
-<option value="20">Type-R TC</option>
-<option value="21">Type-S TC</option>
-<option value="22">Type-B TC</option>
+<option value="0"{{if rangeequal 0 .InputRange}} selected="selected"{{end}}>+/- 15mV</option>
+<option value="1"{{if rangeequal 1 .InputRange}} selected="selected"{{end}}>+/- 50mV</option>
+<option value="2"{{if rangeequal 2 .InputRange}} selected="selected"{{end}}>+/- 100mV</option>
+<option value="3"{{if rangeequal 3 .InputRange}} selected="selected"{{end}}>+/- 500mV</option>
+<option value="4"{{if rangeequal 4 .InputRange}} selected="selected"{{end}}>+/- 1V</option>
+<option value="5"{{if rangeequal 5 .InputRange}} selected="selected"{{end}}>+/- 2.5V</option>
+<option value="6"{{if rangeequal 6 .InputRange}} selected="selected"{{end}}>-</option>
+<option value="7"{{if rangeequal 7 .InputRange}} selected="selected"{{end}}>4~20mA</option>
+<option value="8"{{if rangeequal 8 .InputRange}} selected="selected"{{end}}>+/- 10V</option>
+<option value="9"{{if rangeequal 9 .InputRange}} selected="selected"{{end}}>+/- 5V</option>
+<option value="10"{{if rangeequal 10 .InputRange}} selected="selected"{{end}}>-</option>
+<option value="11"{{if rangeequal 11 .InputRange}} selected="selected"{{end}}>-</option>
+<option value="12"{{if rangeequal 12 .InputRange}} selected="selected"{{end}}>-</option>
+<option value="13"{{if rangeequal 13 .InputRange}} selected="selected"{{end}}>20mA</option>
+<option value="14"{{if rangeequal 14 .InputRange}} selected="selected"{{end}}>-</option>
+<option value="15"{{if rangeequal 15 .InputRange}} selected="selected"{{end}}>Type-J TC</option>
+<option value="16"{{if rangeequal 16 .InputRange}} selected="selected"{{end}}>Type-K TC</option>
+<option value="17"{{if rangeequal 17 .InputRange}} selected="selected"{{end}}>Type-T TC</option>
+<option value="18"{{if rangeequal 18 .InputRange}} selected="selected"{{end}}>Type-E TC</option>
+<option value="19"{{if rangeequal 19 .InputRange}} selected="selected"{{end}}>Type-R TC</option>
+<option value="20"{{if rangeequal 21 .InputRange}} selected="selected"{{end}}>Type-S TC</option>
+<option value="21"{{if rangeequal 22 .InputRange}} selected="selected"{{end}}>Type-B TC</option>
 </select>
 <br>
 <input name="setconfig" value="Set config" type="submit"></input>
-</from>
+</form>
 <div>
 <a href="/">Back to overview</a>
 </div>
