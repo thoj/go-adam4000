@@ -27,6 +27,7 @@ func (a *ADAM4000) startReader() {
 }
 
 func (a *ADAM4000) comResF(format string, va ...interface{}) ([]byte, error) {
+        t0 := time.Now()
 	buf := fmt.Sprintf(format, va...)
 	fmt.Printf("<-- %s\n", buf)
 	_, err := fmt.Fprint(a.wc, buf)
@@ -41,6 +42,7 @@ func (a *ADAM4000) comResF(format string, va ...interface{}) ([]byte, error) {
 		case err = <-a.errorChan:
 			return nil, err
 		case str = <-a.readChan:
+                        fmt.Printf("x (%v)\n", time.Now().Sub(t0))
 			return str, nil
 		case <-time.After(a.Timeout):
 			if retry <= 0 {
