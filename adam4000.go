@@ -22,7 +22,8 @@ func NewADAM4000(addr byte, rc *bufio.Reader, wc *bufio.Writer) *ADAM4000 {
 	a.wc = wc
 	a.Value = make([]float64, 8)
 	a.Retries = 2
-	a.Timeout = 500 * time.Millisecond
+        //Modules usually reply within 50ms. Logest command seems to be read analog channels. (90-110ms)
+	a.Timeout = 250 * time.Millisecond
 	go a.startReader()
 	return &a
 }
