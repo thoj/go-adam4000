@@ -9,6 +9,7 @@ package adam4000
 import (
 	"bufio"
 	"fmt"
+	"time"
 )
 
 type DataFormatCode byte
@@ -151,6 +152,7 @@ type ADAM4000 struct {
 	errorChan chan error
 
 	Retries int
+	Timeout time.Duration
 }
 
 func (a ADAM4000) String() string {

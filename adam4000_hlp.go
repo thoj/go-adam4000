@@ -42,7 +42,7 @@ func (a *ADAM4000) comResF(format string, va ...interface{}) ([]byte, error) {
 			return nil, err
 		case str = <-a.readChan:
 			return str, nil
-		case <-time.After(200 * time.Millisecond):
+		case <-time.After(a.Timeout):
 			if retry <= 0 {
 				return nil, errors.New("No reply from module")
 			}
